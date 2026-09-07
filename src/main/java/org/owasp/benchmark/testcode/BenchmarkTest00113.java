@@ -71,12 +71,14 @@ public class BenchmarkTest00113 extends HttpServlet {
         bar = (String) map21657.get("keyB-21657"); // get it back out
         bar = (String) map21657.get("keyA-21657"); // get safe value back out
 
-        String sql = "INSERT INTO users (username, password) VALUES ('foo','" + bar + "')";
+        String sql = "INSERT INTO users (username, password) VALUES ('foo',?)";
 
         try {
-            java.sql.Statement statement =
-                    org.owasp.benchmark.helpers.DatabaseHelper.getSqlStatement();
-            int count = statement.executeUpdate(sql);
+            java.sql.Connection connection =
+                    org.owasp.benchmark.helpers.DatabaseHelper.getSqlConnection();
+            java.sql.PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, bar);
+            int count = statement.executeUpdate();
             org.owasp.benchmark.helpers.DatabaseHelper.outputUpdateComplete(sql, response);
         } catch (java.sql.SQLException e) {
             if (org.owasp.benchmark.helpers.DatabaseHelper.hideSQLErrors) {

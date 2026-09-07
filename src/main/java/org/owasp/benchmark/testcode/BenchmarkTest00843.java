@@ -74,13 +74,13 @@ public class BenchmarkTest00843 extends HttpServlet {
         map12983.put("keyC", "another-Value"); // put some stuff in the collection
         bar = (String) map12983.get("keyB-12983"); // get it back out
 
-        String sql = "SELECT userid from USERS where USERNAME='foo' and PASSWORD='" + bar + "'";
+        String sql = "SELECT userid from USERS where USERNAME='foo' and PASSWORD=?";
         try {
             // Long results =
             // org.owasp.benchmark.helpers.DatabaseHelper.JDBCtemplate.queryForLong(sql);
             Long results =
                     org.owasp.benchmark.helpers.DatabaseHelper.JDBCtemplate.queryForObject(
-                            sql, Long.class);
+                            sql, Long.class, bar);
             response.getWriter().println("Your results are: " + String.valueOf(results));
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             response.getWriter()

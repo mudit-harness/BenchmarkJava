@@ -57,12 +57,15 @@ public class BenchmarkTest00343 extends HttpServlet {
         if ((7 * 42) - num > 200) bar = "This_should_always_happen";
         else bar = param;
 
-        String sql = "SELECT * from USERS where USERNAME='foo' and PASSWORD='" + bar + "'";
+        String sql = "SELECT * from USERS where USERNAME='foo' and PASSWORD=?";
 
         try {
-            java.sql.Statement statement =
-                    org.owasp.benchmark.helpers.DatabaseHelper.getSqlStatement();
-            statement.execute(sql, new String[] {"username", "password"});
+            java.sql.Connection connection =
+                    org.owasp.benchmark.helpers.DatabaseHelper.getSqlConnection();
+            java.sql.PreparedStatement statement =
+                    connection.prepareStatement(sql, new String[] {"username", "password"});
+            statement.setString(1, bar);
+            statement.execute();
             org.owasp.benchmark.helpers.DatabaseHelper.printResults(statement, sql, response);
         } catch (java.sql.SQLException e) {
             if (org.owasp.benchmark.helpers.DatabaseHelper.hideSQLErrors) {

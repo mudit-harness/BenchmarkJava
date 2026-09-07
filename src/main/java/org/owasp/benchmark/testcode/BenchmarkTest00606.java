@@ -64,12 +64,14 @@ public class BenchmarkTest00606 extends HttpServlet {
         if ((500 / 42) + num > 200) bar = param;
         else bar = "This should never happen";
 
-        String sql = "INSERT INTO users (username, password) VALUES ('foo','" + bar + "')";
+        String sql = "INSERT INTO users (username, password) VALUES ('foo',?)";
 
         try {
-            java.sql.Statement statement =
-                    org.owasp.benchmark.helpers.DatabaseHelper.getSqlStatement();
-            int count = statement.executeUpdate(sql);
+            java.sql.Connection connection =
+                    org.owasp.benchmark.helpers.DatabaseHelper.getSqlConnection();
+            java.sql.PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, bar);
+            int count = statement.executeUpdate();
             org.owasp.benchmark.helpers.DatabaseHelper.outputUpdateComplete(sql, response);
         } catch (java.sql.SQLException e) {
             if (org.owasp.benchmark.helpers.DatabaseHelper.hideSQLErrors) {

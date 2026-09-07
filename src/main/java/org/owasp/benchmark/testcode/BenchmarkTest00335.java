@@ -57,7 +57,7 @@ public class BenchmarkTest00335 extends HttpServlet {
         if ((500 / 42) + num > 200) bar = param;
         else bar = "This should never happen";
 
-        String sql = "SELECT * from USERS where USERNAME=? and PASSWORD='" + bar + "'";
+        String sql = "SELECT * from USERS where USERNAME=? and PASSWORD=?";
 
         try {
             java.sql.Connection connection =
@@ -65,6 +65,7 @@ public class BenchmarkTest00335 extends HttpServlet {
             java.sql.PreparedStatement statement =
                     connection.prepareStatement(sql, new int[] {1, 2});
             statement.setString(1, "foo");
+            statement.setString(2, bar);
             statement.execute();
             org.owasp.benchmark.helpers.DatabaseHelper.printResults(statement, sql, response);
         } catch (java.sql.SQLException e) {

@@ -49,13 +49,13 @@ public class BenchmarkTest00765 extends HttpServlet {
                 org.owasp.benchmark.helpers.ThingFactory.createThing();
         String bar = thing.doSomething(param);
 
-        String sql = "SELECT userid from USERS where USERNAME='foo' and PASSWORD='" + bar + "'";
+        String sql = "SELECT userid from USERS where USERNAME='foo' and PASSWORD=?";
         try {
             // Long results =
             // org.owasp.benchmark.helpers.DatabaseHelper.JDBCtemplate.queryForLong(sql);
             Long results =
                     org.owasp.benchmark.helpers.DatabaseHelper.JDBCtemplate.queryForObject(
-                            sql, Long.class);
+                            sql, Long.class, bar);
             response.getWriter().println("Your results are: " + String.valueOf(results));
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             response.getWriter()
