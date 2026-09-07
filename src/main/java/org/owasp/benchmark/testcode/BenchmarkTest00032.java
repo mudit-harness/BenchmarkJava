@@ -49,9 +49,19 @@ public class BenchmarkTest00032 extends HttpServlet {
         }
 
         try {
-            String sql = "SELECT * from USERS where USERNAME='foo' and PASSWORD='" + param + "'";
+            String sql = "SELECT * from USERS where USERNAME='foo' and PASSWORD=?";
 
-            org.owasp.benchmark.helpers.DatabaseHelper.JDBCtemplate.execute(sql);
+            final String password = param;
+            org.owasp.benchmark.helpers.DatabaseHelper.JDBCtemplate.execute(
+                    sql,
+                    new org.springframework.jdbc.core.PreparedStatementCallback<Boolean>() {
+                        @Override
+                        public Boolean doInPreparedStatement(java.sql.PreparedStatement ps)
+                                throws java.sql.SQLException {
+                            ps.setString(1, password);
+                            return ps.execute();
+                        }
+                    });
             response.getWriter()
                     .println(
                             "No results can be displayed for query: "

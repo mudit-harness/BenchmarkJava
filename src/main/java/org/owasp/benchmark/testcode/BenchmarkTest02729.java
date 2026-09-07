@@ -46,7 +46,7 @@ public class BenchmarkTest02729 extends HttpServlet {
 
         String bar = doSomething(request, param);
 
-        String sql = "SELECT * from USERS where USERNAME=? and PASSWORD='" + bar + "'";
+        String sql = "SELECT * from USERS where USERNAME=? and PASSWORD=?";
 
         try {
             java.sql.Connection connection =
@@ -54,6 +54,7 @@ public class BenchmarkTest02729 extends HttpServlet {
             java.sql.PreparedStatement statement =
                     connection.prepareStatement(sql, new int[] {1, 2});
             statement.setString(1, "foo");
+            statement.setString(2, bar);
             statement.execute();
             org.owasp.benchmark.helpers.DatabaseHelper.printResults(statement, sql, response);
         } catch (java.sql.SQLException e) {

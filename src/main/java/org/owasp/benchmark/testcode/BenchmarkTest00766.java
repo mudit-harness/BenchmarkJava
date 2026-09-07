@@ -52,13 +52,13 @@ public class BenchmarkTest00766 extends HttpServlet {
 
         bar = (7 * 18) + num > 200 ? "This_should_always_happen" : param;
 
-        String sql = "SELECT userid from USERS where USERNAME='foo' and PASSWORD='" + bar + "'";
+        String sql = "SELECT userid from USERS where USERNAME='foo' and PASSWORD=?";
         try {
             // Long results =
             // org.owasp.benchmark.helpers.DatabaseHelper.JDBCtemplate.queryForLong(sql);
             Long results =
                     org.owasp.benchmark.helpers.DatabaseHelper.JDBCtemplate.queryForObject(
-                            sql, Long.class);
+                            sql, Long.class, bar);
             response.getWriter().println("Your results are: " + String.valueOf(results));
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
             response.getWriter()
