@@ -49,11 +49,12 @@ public class BenchmarkTest01389 extends HttpServlet {
 
         String bar = new Test().doSomething(request, param);
 
-        String sql = "SELECT * from USERS where USERNAME='foo' and PASSWORD='" + bar + "'";
+        String sql = "SELECT * from USERS where USERNAME='foo' and PASSWORD=?";
 
         try {
             java.util.List<java.util.Map<String, Object>> list =
-                    org.owasp.benchmark.helpers.DatabaseHelper.JDBCtemplate.queryForList(sql);
+                    org.owasp.benchmark.helpers.DatabaseHelper.JDBCtemplate.queryForList(
+                            sql, bar);
             response.getWriter().println("Your results are: <br>");
 
             for (Object o : list) {

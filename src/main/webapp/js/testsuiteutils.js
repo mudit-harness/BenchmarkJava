@@ -204,19 +204,29 @@ function getXMLMsgValues(xmlResponse) {
  (function ($) {
     $.fn.serializeFormJSON = function () {
 
-        var o = {};
+        // Field names come from the DOM, so they are untrusted. They are never
+        // used as bracket keys on a plain object (which would let a field named
+        // __proto__, constructor or prototype reach Object.prototype). Values
+        // are accumulated in a Map (keyed by the raw field name, no inherited
+        // properties, insertion order preserved) and the result is materialized
+        // with Object.fromEntries(), which only creates own data properties.
+        var fields = new Map();
         var a = this.serializeArray();
         $.each(a, function () {
-            if (o[this.name]) {
-                if (!o[this.name].push) {
-                    o[this.name] = [o[this.name]];
+            var name = String(this.name);
+            var value = this.value || '';
+            if (fields.has(name)) {
+                var current = fields.get(name);
+                if (Array.isArray(current)) {
+                    current.push(value);
+                } else {
+                    fields.set(name, [current, value]);
                 }
-                o[this.name].push(this.value || '');
             } else {
-                o[this.name] = this.value || '';
+                fields.set(name, value);
             }
         });
-        return o;
+        return Object.fromEntries(fields);
     };
 })(jQuery);
 
