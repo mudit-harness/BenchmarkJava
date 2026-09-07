@@ -47,7 +47,7 @@ public class BenchmarkTest02532 extends HttpServlet {
 
         String bar = doSomething(request, param);
 
-        String sql = "SELECT * from USERS where USERNAME=? and PASSWORD='" + bar + "'";
+        String sql = "SELECT * from USERS where USERNAME=? and PASSWORD=?";
 
         try {
             java.sql.Connection connection =
@@ -58,6 +58,7 @@ public class BenchmarkTest02532 extends HttpServlet {
                             java.sql.ResultSet.TYPE_FORWARD_ONLY,
                             java.sql.ResultSet.CONCUR_READ_ONLY);
             statement.setString(1, "foo");
+            statement.setString(2, bar);
             statement.execute();
             org.owasp.benchmark.helpers.DatabaseHelper.printResults(statement, sql, response);
         } catch (java.sql.SQLException e) {
